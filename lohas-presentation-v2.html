@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>樂活珪藻屋 · 品牌簡報</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;700&family=Noto+Sans+TC:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --cream:      #f4efe6;
+  --warm-white: #faf8f3;
+  --sand:       #d8cdb6;
+  --clay:       #b09880;
+  --moss:       #6b7c5c;
+  --dark-moss:  #4a5740;
+  --charcoal:   #28271f;
+  --muted:      #8a8070;
+  --accent:     #7d9468;
+}
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  font-family: 'Noto Sans TC', sans-serif;
+  background: var(--charcoal);
+  color: var(--charcoal);
+  cursor: none;
+}
+
+/* ── CURSOR ── */
+#cursor {
+  position: fixed; width: 10px; height: 10px;
+  background: var(--moss); border-radius: 50%;
+  pointer-events: none; z-index: 9999;
+  transform: translate(-50%,-50%);
+  transition: width .2s, height .2s, background .2s;
+  mix-blend-mode: multiply;
+}
+#cursor-ring {
+  position: fixed; width: 36px; height: 36px;
+  border: 1px solid var(--moss); border-radius: 50%;
+  pointer-events: none; z-index: 9998;
+  transform: translate(-50%,-50%); opacity: .5;
+  transition: transform .18s;
+}
+
+/* ── SLIDES ── */
+#slides { width: 100vw; height: 100vh; position: relative; }
+
+.slide {
+  position: absolute; inset: 0;
+  opacity: 0; pointer-events: none;
+  transition: opacity .8s ease; overflow: hidden;
+}
+.slide.active { opacity: 1; pointer-events: all; }
+
+/* ── NAV DOTS ── */
+#nav-dots {
+  position: fixed; right: 28px; top: 50%;
+  transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 10px; z-index: 100;
+}
+.dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: rgba(255,255,255,.22); cursor: pointer;
+  transition: background .3s, transform .3s;
+}
+.dot.active { background: var(--accent); transform: scale(1.5); }
+.dot:hover  { background: rgba(255,255,255,.55); }
+
+/* ── ARROWS + COUNTER ── */
+.arrow {
+  position: fixed; bottom: 32px; z-index: 100;
+  background: none; border: 1px solid rgba(255,255,255,.2);
+  color: white; width: 42px; height: 42px; border-radius: 50%;
+  font-size: .95rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .2s, border-color .2s;
+}
+.arrow:hover { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.5); }
+#prev { left: calc(50% - 54px); }
+#next { left: calc(50% + 12px); }
+
+#slide-counter {
+  position: fixed; bottom: 46px; left: 50%;
+  transform: translateX(-50%);
+  font-size: .68rem; letter-spacing: .22em;
+  color: rgba(255,255,255,.3);
+  font-family: 'Cormorant Garamond', serif;
+  z-index: 100; pointer-events: none;
+}
+
+/* ── HINT ── */
+#hint {
+  position: fixed; bottom: 86px; left: 50%;
+  transform: translateX(-50%);
+  font-size: .63rem; letter-spacing: .18em;
+  color: rgba(255,255,255,.18); z-index: 100;
+  pointer-events: none; transition: opacity 1s;
+}
+
+/* ── ANIM ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideRight {
+  from { opacity: 0; transform: translateX(-26px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes zoomImg {
+  from { transform: scale(1.04); }
+  to   { transform: scale(1.10); }
+}
+
+.slide.active .anim-1 { animation: fadeUp .7s .10s both ease; }
+.slide.active .anim-2 { animation: fadeUp .7s .25s both ease; }
+.slide.active .anim-3 { animation: fadeUp .7s .40s both ease; }
+.slide.active .anim-4 { animation: fadeUp .7s .55s both ease; }
+.slide.active .anim-5 { animation: fadeUp .7s .70s both ease; }
+
+/* shared */
+.slide-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .72rem; letter-spacing: .35em;
+  color: var(--accent); text-transform: uppercase; margin-bottom: 16px;
+}
+.slide-heading {
+  font-family: 'Noto Serif TC', serif;
+  font-size: clamp(1.5rem,2.6vw,2.3rem); font-weight: 400;
+  line-height: 1.55; letter-spacing: .07em; margin-bottom: 24px;
+}
+.slide-body {
+  font-size: .85rem; color: rgba(255,255,255,.45);
+  line-height: 2.1; font-weight: 300;
+}
+.slide-body em { color: rgba(255,255,255,.8); font-style: normal; font-weight: 400; }
+
+
+/* ════════════════════════════
+   SLIDE 1 — COVER
+════════════════════════════ */
+#slide-1 { display: grid; grid-template-columns: 1fr 1fr; }
+
+.s1-left {
+  background: var(--cream);
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 80px 72px; position: relative; overflow: hidden;
+}
+.s1-left::before {
+  content: ''; position: absolute; bottom: -80px; left: -80px;
+  width: 320px; height: 320px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(107,124,92,.12) 0%, transparent 70%);
+}
+
+/* LOGO */
+.logo-wrap { display: flex; align-items: center; gap: 14px; margin-bottom: 64px; animation: slideRight .9s .1s both ease; }
+.logo-icon  { width: 48px; height: 48px; }
+.brand-zh   { font-family: 'Noto Serif TC', serif; font-size: 1.28rem; font-weight: 500; color: var(--dark-moss); letter-spacing: .1em; display: block; }
+.brand-en   { font-family: 'Cormorant Garamond', serif; font-size: .64rem; letter-spacing: .28em; color: var(--clay); display: block; margin-top: 2px; }
+
+.cover-title {
+  font-family: 'Noto Serif TC', serif;
+  font-size: clamp(2rem,3.8vw,3.2rem); font-weight: 400;
+  line-height: 1.5; color: var(--charcoal); letter-spacing: .08em;
+  margin-bottom: 16px; animation: slideRight .9s .25s both ease;
+}
+.cover-dot   { color: var(--moss); }
+.cover-sub   { font-size: .88rem; color: var(--muted); letter-spacing: .18em; margin-bottom: 48px; font-weight: 300; animation: slideRight .9s .38s both ease; }
+.cover-badge {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--dark-moss); color: rgba(255,255,255,.85);
+  padding: 10px 22px; font-size: .74rem; letter-spacing: .18em;
+  font-family: 'Cormorant Garamond', serif; animation: slideRight .9s .5s both ease;
+}
+
+.s1-right { position: relative; overflow: hidden; }
+.s1-right img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; animation: zoomImg 18s ease-in-out infinite alternate; }
+.s1-right::after { content: ''; position: absolute; inset: 0; background: linear-gradient(120deg, var(--cream) 0%, transparent 22%); }
+
+/* ════════════════════════════
+   SLIDE 2 — STORY
+════════════════════════════ */
+#slide-2 { background: var(--charcoal); display: flex; align-items: stretch; }
+
+.s2-strip { width: 6px; background: linear-gradient(to bottom, var(--moss), var(--clay)); flex-shrink: 0; }
+.s2-content { flex: 1; display: grid; grid-template-columns: 1fr 1fr; }
+.s2-text { padding: 80px 64px; display: flex; flex-direction: column; justify-content: center; border-right: 1px solid rgba(255,255,255,.07); }
+.s2-visual { padding: 80px 64px; display: flex; flex-direction: column; justify-content: center; gap: 26px; }
+
+.belief-item { display: flex; gap: 18px; align-items: flex-start; padding-bottom: 26px; border-bottom: 1px solid rgba(255,255,255,.06); }
+.belief-item:last-child { border-bottom: none; padding-bottom: 0; }
+.belief-num  { font-family: 'Cormorant Garamond', serif; font-size: 2rem; color: var(--moss); opacity: .5; line-height: 1; flex-shrink: 0; width: 34px; }
+.belief-text h4 { font-family: 'Noto Serif TC', serif; font-size: .9rem; color: rgba(255,255,255,.8); margin-bottom: 5px; font-weight: 500; letter-spacing: .04em; }
+.belief-text p  { font-size: .77rem; color: rgba(255,255,255,.36); line-height: 1.8; font-weight: 300; }
+
+/* ════════════════════════════
+   SLIDE 3 — TIMELINE
+════════════════════════════ */
+#slide-3 { background: var(--cream); display: flex; flex-direction: column; justify-content: center; padding: 60px 7vw; }
+.s3-head { margin-bottom: 48px; }
+
+.tl-track { display: grid; grid-template-columns: repeat(5,1fr); position: relative; }
+.tl-track::before { content: ''; position: absolute; top: 13px; left: 0; right: 0; height: 1px; background: linear-gradient(to right, var(--moss), var(--sand)); }
+.tl-node { padding-right: 18px; position: relative; }
+.tl-circle { width: 13px; height: 13px; border-radius: 50%; background: var(--moss); box-shadow: 0 0 0 3px var(--cream), 0 0 0 4.5px var(--sand); margin-bottom: 24px; position: relative; z-index: 1; }
+.tl-era   { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; color: var(--moss); margin-bottom: 7px; }
+.tl-title { font-family: 'Noto Serif TC', serif; font-size: .83rem; color: var(--charcoal); font-weight: 500; margin-bottom: 7px; letter-spacing: .03em; }
+.tl-desc  { font-size: .74rem; color: var(--muted); line-height: 1.85; font-weight: 300; }
+.tl-bar   { margin-top: 14px; height: 2px; background: linear-gradient(to right, var(--moss), transparent); width: 55%; opacity: .4; }
+
+/* ════════════════════════════
+   SLIDE 4 — VALUES
+════════════════════════════ */
+#slide-4 { background: var(--dark-moss); display: grid; grid-template-columns: 360px 1fr; }
+
+.s4-left { padding: 80px 52px; display: flex; flex-direction: column; justify-content: center; border-right: 1px solid rgba(255,255,255,.08); }
+.s4-left .slide-heading { color: var(--warm-white); }
+.s4-left .slide-body    { color: rgba(255,255,255,.42); max-width: 270px; }
+
+.s4-right { padding: 56px 52px; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 2px; }
+.feat-card { background: rgba(255,255,255,.04); padding: 36px 32px; transition: background .3s; }
+.feat-card:hover { background: rgba(255,255,255,.09); }
+.feat-icon-row { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+.feat-icon { width: 36px; height: 36px; border-radius: 50%; border: 1px solid rgba(255,255,255,.2); display: flex; align-items: center; justify-content: center; font-size: .95rem; flex-shrink: 0; }
+.feat-num  { font-family: 'Cormorant Garamond', serif; font-size: .68rem; letter-spacing: .2em; color: var(--accent); }
+.feat-name { font-family: 'Noto Serif TC', serif; font-size: .95rem; color: rgba(255,255,255,.88); font-weight: 500; letter-spacing: .04em; margin-bottom: 9px; }
+.feat-desc { font-size: .76rem; color: rgba(255,255,255,.38); line-height: 1.85; font-weight: 300; }
+
+/* ════════════════════════════
+   SLIDE 5 — CASE STUDY (NEW)
+════════════════════════════ */
+#slide-5 {
+  background: var(--charcoal);
+  display: grid;
+  grid-template-columns: 320px 1fr;
+}
+
+.s5-sidebar {
+  background: var(--cream);
+  padding: 60px 44px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.s5-sidebar::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(107,124,92,.15) 0%, transparent 70%);
+}
+
+.case-badge {
+  display: inline-block;
+  background: var(--moss);
+  color: white;
+  font-size: .65rem;
+  letter-spacing: .2em;
+  padding: 6px 14px;
+  margin-bottom: 20px;
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.s5-sidebar .slide-label { color: var(--moss); }
+.s5-sidebar .slide-heading { color: var(--charcoal); font-size: clamp(1.2rem,1.8vw,1.7rem); margin-bottom: 18px; }
+
+.case-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--sand);
+}
+.case-meta-row { display: flex; gap: 10px; align-items: flex-start; }
+.meta-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--moss); margin-top: 6px; flex-shrink: 0; }
+.meta-label { font-size: .68rem; color: var(--muted); letter-spacing: .1em; font-weight: 300; line-height: 1; margin-bottom: 2px; }
+.meta-value { font-family: 'Noto Serif TC', serif; font-size: .82rem; color: var(--charcoal); font-weight: 500; }
+
+.case-tagline {
+  margin-top: 32px;
+  font-size: .75rem;
+  color: var(--muted);
+  line-height: 1.9;
+  font-weight: 300;
+  border-left: 2px solid var(--moss);
+  padding-left: 14px;
+}
+
+/* Main comparison area */
+.s5-main {
+  display: flex;
+  flex-direction: column;
+  padding: 44px 48px;
+  gap: 20px;
+}
+
+.compare-header {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+.compare-tab {
+  flex: 1;
+  text-align: center;
+  padding: 10px;
+  font-family: 'Noto Serif TC', serif;
+  font-size: .8rem;
+  letter-spacing: .12em;
+  cursor: pointer;
+  transition: all .3s;
+  border-bottom: 2px solid transparent;
+}
+.compare-tab.before-tab { color: rgba(255,255,255,.38); }
+.compare-tab.after-tab  { color: rgba(255,255,255,.38); }
+.compare-tab.active     { color: white; border-bottom-color: var(--accent); }
+
+/* Slider comparison widget */
+.compare-stage {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  border-radius: 2px;
+  cursor: ew-resize;
+  user-select: none;
+  min-height: 0;
+}
+
+.compare-img {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+
+.compare-img.before { z-index: 1; }
+.compare-img.after  { z-index: 2; clip-path: inset(0 50% 0 0); transition: clip-path 0s; }
+
+.compare-handle {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 50%;
+  width: 3px;
+  background: white;
+  z-index: 10;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.compare-handle::before,
+.compare-handle::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px; height: 40px;
+  background: white;
+  border-radius: 50%;
+  top: 50%;
+  margin-top: -20px;
+  box-shadow: 0 2px 12px rgba(0,0,0,.3);
+}
+.compare-handle::after {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%236b7c5c' d='M8 12l-4-4 4-4M16 12l4-4-4-4M8 16l-4 4 4 4M16 16l4 4-4 4' stroke='%236b7c5c' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") center/20px no-repeat white;
+}
+
+/* Labels */
+.compare-label {
+  position: absolute;
+  top: 18px;
+  z-index: 8;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .75rem;
+  letter-spacing: .2em;
+  padding: 5px 14px;
+  pointer-events: none;
+}
+.compare-label.before-lbl { left: 18px; background: rgba(40,39,31,.75); color: rgba(255,255,255,.7); }
+.compare-label.after-lbl  { right: 18px; background: rgba(107,124,92,.85); color: white; }
+
+/* Thumbnails */
+.thumb-row {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.thumb-group {
+  display: flex;
+  gap: 6px;
+  flex: 1;
+  align-items: center;
+}
+.thumb-group-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .65rem;
+  letter-spacing: .2em;
+  padding: 4px 10px;
+  flex-shrink: 0;
+}
+.thumb-group-label.b-lbl { color: rgba(255,255,255,.35); background: rgba(255,255,255,.06); }
+.thumb-group-label.a-lbl { color: var(--accent); background: rgba(125,148,104,.12); }
+
+.thumb {
+  width: 70px; height: 50px;
+  object-fit: cover;
+  cursor: pointer;
+  opacity: .5;
+  border: 1px solid transparent;
+  transition: opacity .25s, border-color .25s, transform .2s;
+  flex-shrink: 0;
+}
+.thumb:hover  { opacity: .8; transform: scale(1.04); }
+.thumb.active { opacity: 1; border-color: var(--accent); }
+
+.thumb-divider { width: 1px; background: rgba(255,255,255,.1); align-self: stretch; margin: 0 4px; }
+
+/* ════════════════════════════
+   SLIDE 6 — CLOSING
+════════════════════════════ */
+#slide-6 { position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+
+.s6-bg { position: absolute; inset: 0; }
+.s6-bg img { width: 100%; height: 100%; object-fit: cover; object-position: center 30%; filter: brightness(.32) saturate(.55); }
+.s6-overlay { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(40,39,31,.7) 0%, rgba(74,87,64,.4) 100%); }
+
+.s6-content { position: relative; z-index: 2; text-align: center; padding: 40px; max-width: 780px; }
+.s6-deco-top { width: 1px; height: 60px; background: linear-gradient(to bottom, transparent, var(--accent)); margin: 0 auto 32px; }
+.s6-title    { font-family: 'Noto Serif TC', serif; font-size: clamp(1.7rem,3.2vw,2.8rem); font-weight: 400; color: white; line-height: 1.6; letter-spacing: .12em; margin-bottom: 22px; }
+.s6-sub      { font-family: 'Cormorant Garamond', serif; font-size: 1rem; color: rgba(255,255,255,.5); letter-spacing: .2em; margin-bottom: 44px; }
+.s6-tagline  { font-family: 'Noto Serif TC', serif; font-size: .8rem; color: rgba(255,255,255,.3); letter-spacing: .14em; border-top: 1px solid rgba(255,255,255,.1); padding-top: 26px; line-height: 2; }
+.s6-deco-bot { width: 1px; height: 60px; background: linear-gradient(to top, transparent, var(--accent)); margin: 32px auto 0; }
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+<div id="nav-dots"></div>
+<button class="arrow" id="prev">&#8592;</button>
+<div id="slide-counter">01 / 06</div>
+<button class="arrow" id="next">&#8594;</button>
+<div id="hint">← → 鍵盤或滾輪切換投影片</div>
+
+<div id="slides">
+
+<!-- ══ SLIDE 1 — COVER ══ -->
+<div class="slide active" id="slide-1">
+  <div class="s1-left">
+    <div class="logo-wrap">
+      <svg class="logo-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1.5" y="1.5" width="45" height="45" rx="2" stroke="#6b7c5c" stroke-width="1.4"/>
+        <path d="M24 7 L38 19 V41 H30 V28 H18 V41 H10 V19 Z" stroke="#6b7c5c" stroke-width="1.6" fill="none" stroke-linejoin="round"/>
+        <path d="M19 13 Q24 8 29 13" stroke="#6b7c5c" stroke-width="1.3" fill="none"/>
+      </svg>
+      <div>
+        <span class="brand-zh">樂活珪藻屋</span>
+        <span class="brand-en">LOHAS DIATOM HOUSE</span>
+      </div>
+    </div>
+    <div>
+      <h1 class="cover-title">來自自然<span class="cover-dot">·</span><br>回歸健康的<br>居住本質</h1>
+      <p class="cover-sub">用天然的力量，守護每一個家的呼吸</p>
+      <div class="cover-badge">&#9632; 品牌簡報 2026 · Since 2007</div>
+    </div>
+  </div>
+  <div class="s1-right">
+    <img src="hero.png" alt="樂活珪藻屋">
+  </div>
+</div>
+
+<!-- ══ SLIDE 2 — STORY ══ -->
+<div class="slide" id="slide-2">
+  <div class="s2-strip"></div>
+  <div class="s2-content">
+    <div class="s2-text">
+      <p class="slide-label anim-1">Brand Story · 品牌故事</p>
+      <h2 class="slide-heading anim-2" style="color:var(--warm-white)">一個信念<br>改變了每個家<br>的呼吸方式</h2>
+      <p class="slide-body anim-3">
+        2007 年，我們從日本引進珪藻土，開啟了推動天然室內裝修環保塗料的旅程。<br><br>
+        我們相信，家不只是遮風避雨的地方，更應該是能讓身心放鬆、自由呼吸的健康空間。<br><br>
+        從一種天然材料的選擇開始，到現在發展出多樣化的特殊藝術塗料，樂活珪藻屋始終堅持——<em>以自然為本，創造更美好、更永續的生活方式。</em>
+      </p>
+    </div>
+    <div class="s2-visual anim-4">
+      <div class="belief-item">
+        <div class="belief-num">01</div>
+        <div class="belief-text"><h4>從日本引進，落地台灣</h4><p>率先引進天然珪藻土建材，開拓台灣健康塗料市場</p></div>
+      </div>
+      <div class="belief-item">
+        <div class="belief-num">02</div>
+        <div class="belief-text"><h4>持續研發，在地創新</h4><p>研發符合台灣氣候的配方，提升功能性與美學表現</p></div>
+      </div>
+      <div class="belief-item">
+        <div class="belief-num">03</div>
+        <div class="belief-text"><h4>領先同業，永續創新</h4><p>引進國際環保建材新技術，成為業界信賴的品牌</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SLIDE 3 — TIMELINE ══ -->
+<div class="slide" id="slide-3">
+  <div class="s3-head anim-1">
+    <p class="slide-label">Milestones · 品牌里程碑</p>
+    <h2 class="slide-heading" style="color:var(--charcoal);font-size:clamp(1.3rem,2vw,1.9rem)">十八年深耕，每一步都是承諾</h2>
+  </div>
+  <div class="tl-track">
+    <div class="tl-node anim-2"><div class="tl-circle"></div><div class="tl-era">2007</div><div class="tl-title">從日本引進珪藻土</div><div class="tl-desc">率先引進日本天然珪藻土，將具調濕、淨化空氣的優異特性帶入台灣市場。</div><div class="tl-bar"></div></div>
+    <div class="tl-node anim-3"><div class="tl-circle"></div><div class="tl-era">2008–2012</div><div class="tl-title">推廣天然環保塗料</div><div class="tl-desc">積極推廣健康、無毒、環保的塗料選擇，讓更多家庭認識天然建材的價值。</div><div class="tl-bar"></div></div>
+    <div class="tl-node anim-4"><div class="tl-circle"></div><div class="tl-era">2013–2016</div><div class="tl-title">研發與創新</div><div class="tl-desc">持續研發適合台灣氣候與生活需求的塗料配方，提升功能性與美學表現。</div><div class="tl-bar"></div></div>
+    <div class="tl-node anim-4" style="animation-delay:.65s"><div class="tl-circle"></div><div class="tl-era">2017–2020</div><div class="tl-title">藝術塗料多樣化</div><div class="tl-desc">推出多款特殊藝術塗料，融合自然質感與設計美學，滿足不同空間風格需求。</div><div class="tl-bar"></div></div>
+    <div class="tl-node anim-5"><div class="tl-circle"></div><div class="tl-era">2021–至今</div><div class="tl-title">領先同業．永續創新</div><div class="tl-desc">持續引進國際環保建材新技術，以創新與專業，成為業界信賴的環保建材領導品牌。</div><div class="tl-bar"></div></div>
+  </div>
+</div>
+
+<!-- ══ SLIDE 4 — VALUES ══ -->
+<div class="slide" id="slide-4">
+  <div class="s4-left">
+    <p class="slide-label anim-1">Our Values · 品牌堅持</p>
+    <h2 class="slide-heading anim-2" style="color:var(--warm-white)">樂活珪藻屋<br>的四大堅持</h2>
+    <p class="slide-body anim-3">每一道工法，每一種原料，都承載著我們對健康居住環境的深刻承諾。</p>
+  </div>
+  <div class="s4-right">
+    <div class="feat-card anim-2"><div class="feat-icon-row"><div class="feat-icon">🌿</div><span class="feat-num">01</span></div><div class="feat-name">天然環保</div><div class="feat-desc">嚴選天然塗料工藝，無毒無害，守護家人健康。每一次呼吸都安心。</div></div>
+    <div class="feat-card anim-3"><div class="feat-icon-row"><div class="feat-icon">💧</div><span class="feat-num">02</span></div><div class="feat-name">調節濕度·淨化空氣</div><div class="feat-desc">珪藻土多孔質結構，有效調節濕度，淨化室內空氣品質。</div></div>
+    <div class="feat-card anim-4"><div class="feat-icon-row"><div class="feat-icon">✦</div><span class="feat-num">03</span></div><div class="feat-name">美學與機能兼具</div><div class="feat-desc">結合藝術塗料工藝，打造質感空間與舒適生活。</div></div>
+    <div class="feat-card anim-5"><div class="feat-icon-row"><div class="feat-icon">🌍</div><span class="feat-num">04</span></div><div class="feat-name">永續未來</div><div class="feat-desc">以環境友善為核心，落實永續經營與社會責任。</div></div>
+  </div>
+</div>
+
+<!-- ══ SLIDE 5 — CASE STUDY ══ -->
+<div class="slide" id="slide-5">
+  <div class="s5-sidebar">
+    <div class="case-badge anim-1">CASE STUDY · 施工案例</div>
+    <p class="slide-label anim-1">黑笠岩礦物塗料地板系列</p>
+    <h2 class="slide-heading anim-2">地坪塗料<br>施工前後<br>對照</h2>
+
+    <div class="case-meta anim-3">
+      <div class="case-meta-row">
+        <div class="meta-dot"></div>
+        <div>
+          <div class="meta-label">施工品項</div>
+          <div class="meta-value">黑笠岩礦物塗料地板</div>
+        </div>
+      </div>
+      <div class="case-meta-row">
+        <div class="meta-dot"></div>
+        <div>
+          <div class="meta-label">施工工序</div>
+          <div class="meta-value">打磨 → 底塗 → 主材 → 面保護</div>
+        </div>
+      </div>
+      <div class="case-meta-row">
+        <div class="meta-dot"></div>
+        <div>
+          <div class="meta-label">施工特色</div>
+          <div class="meta-value">無縫、調濕、天然礦物</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="case-tagline anim-4">
+      原有磨石子地坪，經黑笠岩礦物塗料全面覆蓋，呈現細膩無縫的現代質感，同時保有天然調濕功能。
+    </p>
+  </div>
+
+  <div class="s5-main anim-2">
+    <!-- Tab header -->
+    <div class="compare-header">
+      <div class="compare-tab before-tab active" id="tab-info">拖曳滑桿對比前後 ↔</div>
+    </div>
+
+    <!-- Image comparison slider -->
+    <div class="compare-stage" id="compareStage">
+      <img class="compare-img before" id="imgBefore" src="before_01.jpg" alt="施工前">
+      <img class="compare-img after"  id="imgAfter"  src="after_01.jpg"  alt="施工後">
+      <div class="compare-handle" id="handle"></div>
+      <span class="compare-label before-lbl">BEFORE 施工前</span>
+      <span class="compare-label after-lbl">AFTER 施工後</span>
+    </div>
+
+    <!-- Thumbnails -->
+    <div class="thumb-row">
+      <span class="thumb-group-label b-lbl">施工前</span>
+      <div class="thumb-group" id="beforeThumbs">
+        <img class="thumb active" src="before_01.jpg" data-before="before_01.jpg" data-after="after_01.jpg" alt="前1">
+        <img class="thumb"       src="before_02.jpg" data-before="before_02.jpg" data-after="after_02.jpg" alt="前2">
+      </div>
+      <div class="thumb-divider"></div>
+      <span class="thumb-group-label a-lbl">施工後</span>
+      <div class="thumb-group" id="afterThumbs">
+        <img class="thumb" src="after_01.jpg" data-before="before_01.jpg" data-after="after_01.jpg" alt="後1">
+        <img class="thumb" src="after_02.jpg" data-before="before_02.jpg" data-after="after_02.jpg" alt="後2">
+        <img class="thumb" src="after_03.jpg" data-before="before_02.jpg" data-after="after_03.jpg" alt="後3">
+        <img class="thumb" src="after_cover.jpg" data-before="before_02.jpg" data-after="after_cover.jpg" alt="後4">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SLIDE 6 — CLOSING ══ -->
+<div class="slide" id="slide-6">
+  <div class="s6-bg"><img src="hero.png" alt="closing"></div>
+  <div class="s6-overlay"></div>
+  <div class="s6-content">
+    <div class="s6-deco-top anim-1"></div>
+    <h2 class="s6-title anim-2">讓每一次呼吸都安心<br>讓家回歸自然</h2>
+    <p class="s6-sub anim-3">讓生活更美好</p>
+    <p class="s6-tagline anim-4">
+      樂活珪藻屋 LOHAS DIATOM HOUSE<br>
+      © 2007–2026 · 台灣天然建材領導品牌
+    </p>
+    <div class="s6-deco-bot anim-5"></div>
+  </div>
+</div>
+
+</div><!-- /slides -->
+
+<script>
+// ── Slide nav ──
+const TOTAL = 6;
+let current = 0, animating = false;
+
+const slides = document.querySelectorAll('.slide');
+const counter = document.getElementById('slide-counter');
+const hint    = document.getElementById('hint');
+
+const dotsWrap = document.getElementById('nav-dots');
+slides.forEach((_,i) => {
+  const d = document.createElement('div');
+  d.className = 'dot' + (i===0?' active':'');
+  d.addEventListener('click', () => goTo(i));
+  dotsWrap.appendChild(d);
+});
+const dots = document.querySelectorAll('.dot');
+
+function updateUI() {
+  dots.forEach((d,i) => d.classList.toggle('active', i===current));
+  counter.textContent = String(current+1).padStart(2,'0') + ' / ' + String(TOTAL).padStart(2,'0');
+}
+
+function goTo(idx) {
+  if (animating || idx===current || idx<0 || idx>=TOTAL) return;
+  animating = true;
+  slides[current].classList.remove('active');
+  current = idx;
+  slides[current].classList.add('active');
+  updateUI();
+  setTimeout(() => animating = false, 900);
+}
+
+document.getElementById('prev').addEventListener('click', () => goTo(current-1));
+document.getElementById('next').addEventListener('click', () => goTo(current+1));
+
+document.addEventListener('keydown', e => {
+  if (e.key==='ArrowRight'||e.key==='ArrowDown') goTo(current+1);
+  if (e.key==='ArrowLeft' ||e.key==='ArrowUp')   goTo(current-1);
+});
+
+let wheelLock = false;
+document.addEventListener('wheel', e => {
+  if (wheelLock) return;
+  // Don't switch slides when interacting with compare slider
+  if (document.getElementById('slide-5').classList.contains('active')) return;
+  wheelLock = true;
+  e.deltaY > 0 ? goTo(current+1) : goTo(current-1);
+  setTimeout(() => wheelLock = false, 1000);
+}, { passive: true });
+
+let touchStartX = 0;
+document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+document.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(dx) > 60) dx < 0 ? goTo(current+1) : goTo(current-1);
+}, { passive: true });
+
+setTimeout(() => { hint.style.opacity = '0'; }, 4000);
+updateUI();
+
+// ── Custom cursor ──
+const cur  = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+document.addEventListener('mousemove', e => {
+  cur.style.left  = e.clientX + 'px';
+  cur.style.top   = e.clientY + 'px';
+  ring.style.left = e.clientX + 'px';
+  ring.style.top  = e.clientY + 'px';
+});
+
+// ── Before/After comparison slider ──
+const stage    = document.getElementById('compareStage');
+const imgAfter = document.getElementById('imgAfter');
+const handle   = document.getElementById('handle');
+const imgBefore = document.getElementById('imgBefore');
+
+let dragging = false;
+let sliderPct = 50;
+
+function setSlider(pct) {
+  sliderPct = Math.max(2, Math.min(98, pct));
+  imgAfter.style.clipPath = `inset(0 ${100 - sliderPct}% 0 0)`;
+  handle.style.left = sliderPct + '%';
+}
+
+setSlider(50);
+
+stage.addEventListener('mousedown', e => {
+  dragging = true;
+  e.preventDefault();
+});
+window.addEventListener('mouseup', () => dragging = false);
+window.addEventListener('mousemove', e => {
+  if (!dragging) return;
+  const r = stage.getBoundingClientRect();
+  setSlider(((e.clientX - r.left) / r.width) * 100);
+});
+
+stage.addEventListener('touchstart', e => {
+  dragging = true;
+}, { passive: true });
+window.addEventListener('touchend', () => dragging = false);
+window.addEventListener('touchmove', e => {
+  if (!dragging) return;
+  const r = stage.getBoundingClientRect();
+  setSlider(((e.touches[0].clientX - r.left) / r.width) * 100);
+}, { passive: true });
+
+// ── Thumbnails ──
+const allThumbs = document.querySelectorAll('.thumb');
+
+allThumbs.forEach(th => {
+  th.addEventListener('click', () => {
+    allThumbs.forEach(t => t.classList.remove('active'));
+    th.classList.add('active');
+
+    const bSrc = th.dataset.before;
+    const aSrc = th.dataset.after;
+
+    // Smooth swap
+    imgBefore.style.opacity = '0';
+    imgAfter.style.opacity  = '0';
+    setTimeout(() => {
+      imgBefore.src = bSrc;
+      imgAfter.src  = aSrc;
+      imgBefore.style.opacity = '1';
+      imgAfter.style.opacity  = '1';
+      setSlider(50);
+    }, 220);
+  });
+});
+
+// img transition
+[imgBefore, imgAfter].forEach(img => {
+  img.style.transition = 'opacity .22s ease';
+});
+</script>
+</body>
+</html>
